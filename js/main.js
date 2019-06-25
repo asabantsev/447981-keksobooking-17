@@ -1,32 +1,18 @@
 'use strict';
 
+var TOTAL_OFFERS = 8;
+var LOCATION_X_MIN = 130;
+var LOCATION_X_MAX = 1070;
+var LOCATION_Y_MIN = 130;
+var LOCATION_Y_MAX = 630;
+var TYPES = ['palace', 'flat', 'house', 'bungalo'];
+var AVATAR_PATH = 'img/avatars/user0';
+
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
 var similarListElement = map.querySelector('.map__pins');
-
 var mapTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-var nearbyOffers = {
-  objectAtr: {
-    author: {
-      avatar: 'img/avatars/user0',
-    },
-    offer: {
-      type: ['palace', 'flat', 'house', 'bungalo'],
-    },
-    location: {
-      x: {
-        min: 150,
-        max: 1000
-      },
-      y: {
-        min: 300,
-        max: 630
-      }
-    }
-  },
-};
 
 var randomInteger = function (min, max) {
   min = Math.ceil(min);
@@ -34,36 +20,38 @@ var randomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-var generateObject = function () {
-  var objectAtr = [];
+var generateOffer = function () {
+  var offerArray = [];
 
-  for (var i = 1; i < 9; i++) {
-    objectAtr[i] = {
+  for (var i = 0; i < TOTAL_OFFERS; i++) {
+    var offerObject = {
       author: {
-        avatar: nearbyOffers.objectAtr.author.avatar + i + '.png',
+        avatar: AVATAR_PATH + i + '.png',
       },
       offer: {
-        type: nearbyOffers.objectAtr.offer.type[randomInteger(0, nearbyOffers.objectAtr.offer.type.length - 1)]
+        type: TYPES[randomInteger(0, TYPES.length)]
       },
       location: {
-        x: randomInteger(nearbyOffers.objectAtr.location.x.min, nearbyOffers.objectAtr.location.x.max),
-        y: randomInteger(nearbyOffers.objectAtr.location.y.min, nearbyOffers.objectAtr.location.y.max)
+        x: randomInteger(LOCATION_X_MIN, LOCATION_X_MAX),
+        y: randomInteger(LOCATION_Y_MIN, LOCATION_Y_MAX)
       },
     };
+
+    offerArray.push(offerObject);
   }
 
-  return objectAtr;
+  return offerArray;
 };
 
-var data = generateObject();
+var data = generateOffer();
 
-var createPin = function (objectAtr) {
+var createPin = function (offerArray) {
   var pinElement = mapTemplate.cloneNode(true);
 
-  pinElement.querySelector('img').src = objectAtr.author.avatar;
-  pinElement.style.left = objectAtr.location.x + 'px';
-  pinElement.style.top = objectAtr.location.y + 'px';
-  pinElement.querySelector('img').alt = objectAtr.offer.type;
+  pinElement.querySelector('img').src = offerArray.author.avatar;
+  pinElement.querySelector('img').alt = offerArray.offer.type;
+  pinElement.style.left = offerArray.location.x + 'px';
+  pinElement.style.top = offerArray.location.y + 'px';
 
   return pinElement;
 };
@@ -71,9 +59,10 @@ var createPin = function (objectAtr) {
 var renderPin = function () {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 1; i < data.length; i++) {
+  for (var i = 0; i < data.length; i++) {
     fragment.appendChild(createPin(data[i]));
   }
+
   similarListElement.appendChild(fragment);
 };
 
