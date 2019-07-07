@@ -43,7 +43,7 @@ var generateOffer = function () {
   return offerArray;
 };
 
-var data = generateOffer();
+var offers = generateOffer();
 
 var createPin = function (offerArray) {
   var pinElement = mapTemplate.cloneNode(true);
@@ -59,8 +59,8 @@ var createPin = function (offerArray) {
 var renderPin = function () {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < data.length; i++) {
-    fragment.appendChild(createPin(data[i]));
+  for (var i = 0; i < offers.length; i++) {
+    fragment.appendChild(createPin(offers[i]));
   }
 
   similarListElement.appendChild(fragment);
